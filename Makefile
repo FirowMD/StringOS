@@ -1,6 +1,5 @@
 BOOT=bootsect
 KERNEL=kernel
-GDB_SCR=script.gdb
 SCR_CONTENT=																\
 	target remote |															\
 	qemu-system-i386 -fda $(BOOT).bin -fdb $(KERNEL).bin -S -gdb stdio\n	\
@@ -13,10 +12,6 @@ all:
 	gcc -g3 -fpermissive -fno-pie -ffreestanding -m32 -o $(KERNEL).o -c $(KERNEL).cpp
 	ld --oformat binary -Ttext 0x10000 -o $(KERNEL).bin --entry=KernelStart -m elf_i386 $(KERNEL).o
 	qemu-system-i386 -fda $(BOOT).bin -fdb $(KERNEL).bin
-
-debug:
-	echo "$(SCR_CONTENT)" | tee $(GDB_SCR)
-	gdb -q -x $(GDB_SCR)
 
 clean:
 	rm -r *.o
